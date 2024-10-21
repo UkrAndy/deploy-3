@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Список товарів</title>
+  </head>
+  <script>
+    async function deleteProduct(id) {
+      console.log('=======deleteProduct')
+      console.log(id)
+
+      try {
+        const response = await fetch('/products/', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id }),
+        })
+
+        if (response.ok) {
+          console.log('Product deleted successfully')
+          // Перенаправлення на список товарів після видалення
+          window.location.href = '/products'
+        } else {
+          console.error('Failed to delete product')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    }
+  </script>
+  <body>
+    <h1>Список товарів</h1>
+    <a href="/">На головну</a>
+    <a href="/products/create">Додати товар</a>
+    <table>
+      <tr>
+        <th>Назва</th>
+        <th>Ціна</th>
+        <th>Дії</th>
+      </tr>
+      <% products.forEach(product => { %>
+      <tr>
+        <td>
+          <img src="/<%= product.imgSrc %>" />
+        </td>
+        <td><a href="/products/<%= product.id %>"><%= product.name %></a></td>
+        <td><%= product.price %></td>
+        <td>
+          <a href="/products/edit/<%= product.id %>">Редагувати</a>
+
+          <button onclick="deleteProduct(<%= product.id %>)">Видалити</button>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+  </body>
+</html>
